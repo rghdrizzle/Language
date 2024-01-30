@@ -8,11 +8,15 @@ Created on Sat Jan 27 14:08:58 2024
 from lexer import *
 
 def main():
-    source = "LOL IM THE BEST"
+    source = "+- \"This is a string\" # This is a comment!\n */ 23 45.45" 
     lexer = Lexer(source)
+    print(lexer.source)
+
+    token = lexer.getToken()
+    while token.kind != TokenType.EOF:
+        print(token.kind)
+        token = lexer.getToken()
     
-    while lexer.peek()!="\0":
-        print(lexer.curChar)
-        lexer.nextChar()
-        
 main()
+
+        
