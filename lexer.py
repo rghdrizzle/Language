@@ -46,8 +46,13 @@ class Token:
     def __init__(self, tokenText, tokenKind):
         self.text = tokenText   
         self.kind = tokenKind   
-
-
+        
+    @staticmethod
+    def checkIfKeyword(tokText):
+        for kind in TokenType:
+            if kind.name == tokText and kind.value>=100 and kind.value<=200: #checks if the tokentext given is the same as the enum's name and checks if the value is in the range
+                return kind
+        return None 
 
 class Lexer:
     def __init__(self, source):
@@ -167,6 +172,17 @@ class Lexer:
                     self.nextChar()
             tokText = self.source[startPos : self.curPos + 1] 
             token = Token(tokText, TokenType.NUMBER)
+        elif self.curChar.isalpha():
+            startPos = self.curPos
+            while self.peek().isalnum():
+                self.nextChar()
+            # Check if the token is in the list of keywords.
+            tokText = self.source[startPos : self.curPos + 1] # Get the substring.
+            keyword = Token.checkIfKeyword(tokText)
+            if keyword == None: # Identifier
+                token = Token(tokText, TokenType.IDENT)
+            else:   # Keyword
+                token = Token(tokText, keyword)
         else:
             # Unknown token!
             #self.abort("Unknown token: " + self.curChar)
