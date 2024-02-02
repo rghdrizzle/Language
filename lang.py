@@ -6,16 +6,19 @@ Created on Sat Jan 27 14:08:58 2024
 """
 
 from lexer import *
+from parser_1 import *
+import sys
 
 def main():
-    source = "+- \"This is a string\" # This is a comment!\n */ 23 45.45 IF lol Repeat" 
-    lexer = Lexer(source)
-    print(lexer.source)
+    print("Langauge Compiler")
+    if len(sys.argv)!= 2:
+        sys.exit("Error: Need a source file as argument.")
+    with open(sys.argv[1],'r') as input:
+        source = input.read()
 
-    token = lexer.getToken()
-    while token.kind != TokenType.EOF:
-        print(token.kind)
-        token = lexer.getToken()
+    lexer = Lexer(source)
+    parser = Parser(source)
+    parser.program()
     
 main()
 
