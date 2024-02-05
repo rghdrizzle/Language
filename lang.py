@@ -17,7 +17,7 @@ def main():
         source = input.read()
 
     lexer = Lexer(source)
-    parser = Parser(source)
+    parser = Parser(lexer)
     parser.program()
     
 main()

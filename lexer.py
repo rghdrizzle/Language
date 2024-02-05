@@ -56,7 +56,7 @@ class Token:
 
 class Lexer:
     def __init__(self, source):
-        self.source = source + "\n"  # Source code to lex as a string. Append a newline to simplify lexing/parsing the last token/statement.
+        self.source = source + "\n"  
         self.curChar =''
         self.curPos = -1
         pass

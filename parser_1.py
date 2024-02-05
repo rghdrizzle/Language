@@ -2,7 +2,7 @@ from lexer import *
 import sys
 
 class Parser:
-    def __init__self(self,lexer):
+    def __init__(self,lexer):
         self.lexer = lexer
         self.curToken = None
         self.peekToken = None
@@ -16,7 +16,7 @@ class Parser:
     # Try to match current token. If not, error. Advances the current token.
     def match(self,kind):
         if not self.checkToken(kind):
-            self.abort("Expected " + kind.name + ", got " + self.curToken.kind.name)
+            self.abort("Expected " + kind.name + ", got "+ self.curToken.kind.name)
         self.nextToken()
 
     def nextToken(self):
@@ -25,5 +25,31 @@ class Parser:
     
     def abort(self,message):
         sys.exit("Error: "+ message)
+
+    #PRODUCTION RULES
+    # program : statement* [ 0 or more statements]
+    def program(self):
+        print("PROGRAM")
+        while not self.checkToken(TokenType.EOF):
+            self.statement()
+    
+    def statement(self):
+        if self.checkToken(TokenType.PRINT):
+            print("STATEMENT-PRINT")
+            self.nextToken()
+            if self.checkToken(TokenType.STRING):
+                self.nextToken()
+            else:
+                self.expression()
+        self.nl()
+
+    def nl(self):
+        print("NEWLINE")
+        self.match(TokenType.NEWLINE)
+        while self.checkToken(TokenType.NEWLINE):
+            self.nextToken()
+
+    #def expression(self):
+
 
 
