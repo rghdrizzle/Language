@@ -41,6 +41,17 @@ class Parser:
                 self.nextToken()
             else:
                 self.expression()
+        elif self.checkToken(TokenType.IF):
+            print("STATEMENT-IF")
+            self.nextToken()
+            self.comparison()
+
+            self.match(TokenType.THEN)
+            self.nl()
+            while not self.checkToken(TokenType.ENDIF):
+                self.statement()
+
+            self.match(TokenType.ENDIF)
         self.nl()
 
     def nl(self):
