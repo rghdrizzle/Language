@@ -45,13 +45,23 @@ class Parser:
             print("STATEMENT-IF")
             self.nextToken()
             self.comparison()
-
             self.match(TokenType.THEN)
             self.nl()
             while not self.checkToken(TokenType.ENDIF):
                 self.statement()
 
             self.match(TokenType.ENDIF)
+            
+        elif self.checkToken(TokenType.WHILE):
+            print("STATEMENT-WHILE")
+            self.nextToken()
+            self.comparison()
+            self.match(TokenType.REPEAT)
+            self.nl()
+            while not self.checkToken(TokenType.ENDWHILE):
+                self.statement()
+
+            self.match(TokenType.ENDWHILE)
         self.nl()
 
     def nl(self):
