@@ -16,7 +16,14 @@ func New(input string) *Lexer {
 	l:= &Lexer{input: input}
 	l.readChar()
 	return l
-}	
+}
+func (l *Lexer)peekChar()byte{
+	if l.readPosition>= len(l.input){
+		return 0
+	}else {
+		return l.input[l.readPosition]
+	}
+}
 func (l *Lexer)readChar(){
 	if l.readPosition>= len(l.input){
 		l.ch=0
@@ -35,7 +42,7 @@ func (l *Lexer)NextToken() token.Token{
 	case '+':
 		tok = newToken(token.PLUS, l.ch)
 	case '-':
-		tok = newToken(token.SUBT,l.ch)
+		tok = newToken(token.MINUS,l.ch)
 	case ';':
 		tok = newToken(token.SEMICOLON, l.ch)
 	case '(':
@@ -48,6 +55,16 @@ func (l *Lexer)NextToken() token.Token{
 		tok = newToken(token.LBRAC, l.ch)
 	case '}':
 		tok = newToken(token.RBRAC, l.ch)
+	case '!':
+		tok = newToken(token.BANG, l.ch)
+	case '/':
+		tok = newToken(token.SLASH, l.ch)
+	case '*':
+		tok = newToken(token.ASTERISK, l.ch)
+	case '<':
+		tok = newToken(token.LT, l.ch)
+	case '>':
+		tok = newToken(token.GT, l.ch)
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
