@@ -23,7 +23,7 @@ type Identifier struct{
 	Token token.Token
 	Value string
 }
-func (i *Identifier) expressionNode() {}
+func (i *Identifier) ExpressionNode() {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
 
 type LetStatement struct{
