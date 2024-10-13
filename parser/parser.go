@@ -6,8 +6,6 @@ import (
 	"rghdrizzle/language/lexer"
 	"rghdrizzle/language/tokens"
 	"strconv"
-
-	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 )
 const (
   _ int = iota
@@ -47,14 +45,14 @@ type Parser struct{
   infixParseFns map[token.TokenType]infixParseFn
 }
 func (p *Parser) peekPrecedence() int{
-  if pr,ok:= precedences[p.peekToken.Type];!ok{
+  if pr,ok:= precedences[p.peekToken.Type];ok{
     return pr
   }
   return LOWEST
 }
 
 func (p *Parser) curPrecedence() int{
-  if pr,ok := precedences[p.curToken.Type];!ok{
+  if pr,ok := precedences[p.curToken.Type];ok{
     return pr
   }
   return LOWEST
@@ -191,6 +189,15 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
     return nil
   }
   leftExp := prefix()
+  for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence(){
+    infix := p.infixParseFns[p.peekToken.Type]
+    if infix==nil{
+      return leftExp
+    }
+    p.nextToken()
+    leftExp = infix(leftExp)
+
+  }
     return leftExp
 }  
 
@@ -222,10 +229,10 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
     return expression
 }
 
-func (p *Parser) parseInfixExpression() ast.Expression{
+func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression{
   expression := &ast.InfixExpression{
-    Token: p.curToken
-    Operator: p.operator,
+    Token: p.curToken,
+    Operator: p.curToken.Literal,
     Left: left,
 
   }
