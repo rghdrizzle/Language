@@ -508,7 +508,7 @@ func TestIfExpression(t *testing.T){
 
 }
 
-func testIfElseExpression(t *testing.T){
+func TestIfElseExpression(t *testing.T){
   input := `if (x < y) { x } else { y }`
 
   l := lexer.New(input)
@@ -516,6 +516,7 @@ func testIfElseExpression(t *testing.T){
   p := New(l)
 
   program := p.ParseProgram()
+  checkParserErrors(t, p)
 
   if len(program.Statements) != 1 {
     t.Fatalf("program.Body does not contain %d statements. got=%d\n",1, len(program.Statements))
