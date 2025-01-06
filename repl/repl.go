@@ -7,6 +7,7 @@ import(
 	"rghdrizzle/language/lexer"
 	//"rghdrizzle/language/tokens"
 	"rghdrizzle/language/parser"
+	"rghdrizzle/language/evaluator"
 )
 
 const promt ="%>>"
@@ -30,7 +31,9 @@ func StartRepl(in io.Reader,out io.Writer){
 			continue
 		}
 
-		io.WriteString(out, program.String())
+		evaluated := evaluator.Eval(program)
+
+		io.WriteString(out, evaluated.Inspect())
 		io.WriteString(out,"\n")
 	}
 
