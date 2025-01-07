@@ -6,6 +6,10 @@ import (
 	"rghdrizzle/language/objects"
 
 )
+var (
+	TRUE = &objects.Boolean{Value: true}
+	FALSE = &objects.Boolean{Value: false}
+)
 
 func Eval(node ast.Node) objects.Object{
 	switch node := node.(type){
@@ -13,6 +17,8 @@ func Eval(node ast.Node) objects.Object{
 		return evalStatement(node.Statements)
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
+	case *ast.Boolean:
+		return nativeBoolToBooleanObject(node.Value)
 	case *ast.IntegerLiteral:
 		return &objects.Integer{Value: node.Value}
 	}
@@ -26,4 +32,12 @@ func evalStatement(statements []ast.Statement) objects.Object{
 	}
 
 	return result
+}
+
+func nativeBoolToBooleanObject(value bool) objects.Object{
+	if value==true{
+		return TRUE
+	}else{
+		return FALSE
+	}
 }
