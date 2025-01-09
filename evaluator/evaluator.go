@@ -15,6 +15,9 @@ func Eval(node ast.Node) objects.Object{
 	switch node := node.(type){
 	case *ast.Program:
 		return evalStatement(node.Statements)
+	case *ast.PrefixExpression:
+		right := Eval(node.Right)
+		return evalPrefixExpression(node.Operator,right)
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
 	case *ast.Boolean:
