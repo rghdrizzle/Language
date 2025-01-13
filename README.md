@@ -1,2 +1,2 @@
 # Language
-A compiler 
+An Interpreter written in golang.
