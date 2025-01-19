@@ -8,6 +8,7 @@ const (
 	INTEGER_OBJ = "INTEGER"
 	BOOLEAN_OBJ = "BOOLEAN"
 	NULL_OBJ = "NULL"
+	RETURN_VALUE_OBJ = "RETURN_VALUE"
 
 )
 
@@ -24,6 +25,10 @@ type Integer struct{
 
 type Boolean struct{
 	Value bool
+}
+
+type RetrunValue struct{
+	Value Object
 }
 
 type Null struct{}
@@ -51,6 +56,13 @@ func (n *Null) Type() ObjectType{
 	return NULL_OBJ
 }
 
+func (rv *RetrunValue) Type() ObjectType{
+	return RETURN_VALUE_OBJ
+}
+
+func (rv *RetrunValue) Inspect() string{
+	return rv.Value.Inspect()
+}
 
 
 
