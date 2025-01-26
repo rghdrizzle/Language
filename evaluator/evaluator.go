@@ -23,6 +23,9 @@ func Eval(node ast.Node) objects.Object{
 		left := Eval(node.Left)
 		right := Eval(node.Right)
 		return evalInfixExpression(left,node.Operator,right)
+	case *ast.ReturnStatement:
+		val := Eval(node.ReturnValue)
+		return &objects.RetrunValue{Value: val}
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
 	case *ast.BlockStatement:
@@ -41,6 +44,9 @@ func evalStatement(statements []ast.Statement) objects.Object{
 	var result objects.Object
 	for _,statement := range statements{
 		result = Eval(statement)
+		if returnvalue,ok := result.(*objects.RetrunValue);ok{
+			return returnvalue.Value
+		}
 	}
 
 	return result
