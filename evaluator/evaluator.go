@@ -17,13 +17,25 @@ func Eval(node ast.Node) objects.Object{
 		return evalProgram(node)
 	case *ast.PrefixExpression:
 		right := Eval(node.Right)
+		if isError(right){
+			return right
+		}
 		return evalPrefixExpression(node.Operator,right)
 	case *ast.InfixExpression:
 		left := Eval(node.Left)
+		if isError(left){
+			return left
+		}
 		right := Eval(node.Right)
+		if isError(right){
+			return right
+		}
 		return evalInfixExpression(left,node.Operator,right)
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue)
+		if isError(val){
+			return val
+		}
 		return &objects.RetrunValue{Value: val}
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
@@ -153,6 +165,9 @@ func evalIntegerInfixExpression(left objects.Object,op string,right objects.Obje
 
 func evalIfExpression(ie *ast.IfExpression) objects.Object{
 	condition := Eval(ie.Condition)
+	if isError(condition){
+		return condition
+	}
 	if isTruthy(condition){
 		return Eval(ie.Consequence)
 	}else if ie.Alternative!=nil{
@@ -178,4 +193,10 @@ func isTruthy(obj objects.Object)bool{
 
 func newError(format string ,a ...interface{}) *objects.Error{
 	return &objects.Error{Message: fmt.Sprintf(format,a...)}
+}
+func isError(obj objects.Object)bool{
+	if obj!=nil{
+		return obj.Type() == objects.ERROR_OBJ
+	}
+	return false
 }
