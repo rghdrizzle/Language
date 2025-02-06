@@ -37,6 +37,13 @@ func Eval(node ast.Node) objects.Object{
 			return val
 		}
 		return &objects.RetrunValue{Value: val}
+	case *ast.LetStatement:
+		idt := node.Name
+		val := Eval(node.Value)
+		if isError(val) {
+			return val
+		}			
+		return evalLetStatement(idt,val) 
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression)
 	case *ast.BlockStatement:
