@@ -8,12 +8,14 @@ import(
 	//"rghdrizzle/language/tokens"
 	"rghdrizzle/language/parser"
 	"rghdrizzle/language/evaluator"
+	"rghdrizzle/language/objects"
 )
 
 const promt ="%>>"
 
 func StartRepl(in io.Reader,out io.Writer){
 	scanner := bufio.NewScanner(in)
+	env  := objects.NewEnvironment()
 
 	for {
 		fmt.Print(promt)
@@ -31,10 +33,11 @@ func StartRepl(in io.Reader,out io.Writer){
 			continue
 		}
 
-		evaluated := evaluator.Eval(program)
-
-		io.WriteString(out, evaluated.Inspect())
-		io.WriteString(out,"\n")
+		evaluated := evaluator.Eval(program,env)
+		if evaluated!=nil{
+			io.WriteString(out, evaluated.Inspect())
+			io.WriteString(out,"\n")
+		}
 	}
 
 }
