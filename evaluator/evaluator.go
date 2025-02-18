@@ -19,6 +19,19 @@ func Eval(node ast.Node, env *objects.Environment) objects.Object{
 		return evalIdentifier(node,env)
 	case *ast.IntegerLiteral:
 		return &objects.Integer{Value: node.Value}
+	case *ast.FunctionLiteral:
+		params := node.Parameters
+		body := node.Body
+		return &objects.Function{Parameters: params,Body: body, Env: env}
+	case *ast.CallExpression:
+		function := Eval(node.Function,env)
+		if isError(function){
+			return function
+		}
+		args := evalExpressions(node.Arguments,env)
+		if len(args)==1 && isError(args[0]){
+			return args[0]
+		}
 	case *ast.PrefixExpression:
 		right := Eval(node.Right,env)
 		if isError(right){
