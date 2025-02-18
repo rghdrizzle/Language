@@ -230,3 +230,16 @@ func evalIdentifier(ident *ast.Identifier,env *objects.Environment) objects.Obje
 	}
 	return obj
 }
+
+func evalExpressions(exp []ast.Expression,env *objects.Environment) []objects.Object{
+	var result []objects.Object
+
+	for _, e := range(exp){
+		evaluated := Eval(e,env)
+		if isError(evaluated){
+			return []objects.Object{evaluated}
+		}
+		result = append(result, evaluated)
+	}
+	return result
+}
