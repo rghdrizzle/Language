@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"rghdrizzle/language/ast"
 	"rghdrizzle/language/objects"
+
+	"github.com/gdamore/tcell/v2/terminfo/extended"
 )
 var (
 	TRUE = &objects.Boolean{Value: true}
@@ -32,6 +34,7 @@ func Eval(node ast.Node, env *objects.Environment) objects.Object{
 		if len(args)==1 && isError(args[0]){
 			return args[0]
 		}
+		return applyFunction(function, args)
 	case *ast.PrefixExpression:
 		right := Eval(node.Right,env)
 		if isError(right){
@@ -242,4 +245,14 @@ func evalExpressions(exp []ast.Expression,env *objects.Environment) []objects.Ob
 		result = append(result, evaluated)
 	}
 	return result
+}
+
+func applyFunction(function objects.Object,args []objects.Object) objects.Object{
+	fn, ok := function.(*objects.Function)
+	if !ok{
+		return newError("not a function: %s", function.Type())
+	}
+	extendedEnv := extendFunctionEnv(function,args)
+	evaluated := Eval(fn.Body,extendedEnv)
+	return unwrapReturnValue(evaluated)
 }
