@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"rghdrizzle/language/ast"
 	"rghdrizzle/language/objects"
-
-	"github.com/gdamore/tcell/v2/terminfo/extended"
 )
 var (
 	TRUE = &objects.Boolean{Value: true}
@@ -252,7 +250,7 @@ func applyFunction(function objects.Object,args []objects.Object) objects.Object
 	if !ok{
 		return newError("not a function: %s", function.Type())
 	}
-	extendedEnv := extendFunctionEnv(function,args)
+	extendedEnv := extendFunctionEnv(fn,args)
 	evaluated := Eval(fn.Body,extendedEnv)
 	return unwrapReturnValue(evaluated)
 }
