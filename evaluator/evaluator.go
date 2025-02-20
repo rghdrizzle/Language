@@ -256,3 +256,18 @@ func applyFunction(function objects.Object,args []objects.Object) objects.Object
 	evaluated := Eval(fn.Body,extendedEnv)
 	return unwrapReturnValue(evaluated)
 }
+
+func extendFunctionEnv(fn *objects.Function,args []objects.Object) *objects.Environment{
+	env := objects.NewEnclosedEnvironment(fn.Env)
+	for paramIdx, param := range fn.Parameters{
+		env.Set(param.Value, args[paramIdx])
+	}
+	return env
+}
+
+func unwrapReturnValue(obj objects.Object) objects.Object{
+	if returnValue, ok := obj.(*objects.RetrunValue);ok{
+		return returnValue.Value
+	}
+	return obj
+}
