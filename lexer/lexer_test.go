@@ -19,7 +19,10 @@ func TestNextToken(t *testing.T){
 		return true;
 		} else {
 		return false;
-		}`
+		}
+		"foobar"
+		"foo bar"`
+		
 	tests := []struct {
 		expectedType token.TokenType
 		expectedLiteral string
@@ -72,6 +75,9 @@ func TestNextToken(t *testing.T){
 	{token.GT, ">"},
 	{token.INT, "5"},
 	{token.SEMICOLON, ";"},
+	{token.STRING, "foobar"},
+	{token.STRING, "foo bar"},
+	{token.EOF, ""},	
 	{token.EOF, ""},
 	}
 	l := New(input)
@@ -85,3 +91,4 @@ func TestNextToken(t *testing.T){
 		}
 	}	
 }
+
