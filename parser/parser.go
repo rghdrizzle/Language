@@ -84,6 +84,7 @@ func New(l *lexer.Lexer) *Parser{
   p.registerPrefix(token.ELSE, p.parseIfExpression)
   p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
   p.registerInfix(token.LPAREN, p.parseCallExpression)
+  p.registerPrefix(token.STRING,p.parseStringLiteral)
   p.nextToken()
   p.nextToken()
 
@@ -377,4 +378,8 @@ func (p *Parser) parseCallArguments() []ast.Expression{
     return nil
   }
     return args
+}
+
+func (p *Parser) parseStringLiteral() ast.Expression{
+    return &ast.StringLiteral{Value: p.curToken.Literal, Token: p.curToken}
 }
