@@ -17,6 +17,8 @@ func Eval(node ast.Node, env *objects.Environment) objects.Object{
 		return evalProgram(node,env)
 	case *ast.Identifier:
 		return evalIdentifier(node,env)
+	case *ast.StringLiteral:
+		return &objects.String{Value: node.Value}
 	case *ast.IntegerLiteral:
 		return &objects.Integer{Value: node.Value}
 	case *ast.FunctionLiteral:
