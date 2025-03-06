@@ -150,6 +150,8 @@ func evalInfixExpression(left objects.Object,op string,right objects.Object) obj
 	switch{
 	case left.Type()==objects.INTEGER_OBJ && right.Type()==objects.INTEGER_OBJ:
 		return evalIntegerInfixExpression(left,op,right)
+	case left.Type() == objects.STRING_OBJ && right.Type() == objects.STRING_OBJ:
+		return evalStringInfixExpression(op, left, right)
 	case op=="==":
 		return nativeBoolToBooleanObject(left==right)
 	case op == "!=":
@@ -270,4 +272,14 @@ func unwrapReturnValue(obj objects.Object) objects.Object{
 		return returnValue.Value
 	}
 	return obj
+}
+
+func evalStringInfixExpression(op string, left objects.Object, right objects.Object)objects.Object{
+	leftValue := left.(*objects.String).Value
+	rightValue := right.(*objects.String).Value
+	if op=="+"{
+		return &objects.String{Value: leftValue+rightValue}
+	}else{
+		return newError("unknown operator: %s %s %s",left.Type(), op, right.Type())
+	}
 }
