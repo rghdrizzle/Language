@@ -42,6 +42,8 @@ const (
 	BANG      = "!"
 	ASTERISK  = "*"
 	SLASH     = "/"
+	LBRACKET  = "["
+	RBRACKET  = "]"
 
 	LT = "<"
 	GT = ">"
