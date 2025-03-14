@@ -2,7 +2,6 @@ package ast
 
 import (
 	"bytes"
-	"rghdrizzle/language/objects"
 	"rghdrizzle/language/tokens"
 	"strings"
 )
