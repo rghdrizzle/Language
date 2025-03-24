@@ -226,6 +226,24 @@ func (al *ArrayLiteral) String() string {
 	return out.String()
 }
 
+type IndexExpression struct { //example arr[1], arr[1+1] etc
+	Token token.Token
+	Left  Expression
+	Index Expression
+}
+
+func (ie *IndexExpression) ExpressionNode(){}
+func (ie *IndexExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *IndexExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(ie.Left.String())
+	out.WriteString("[")
+	out.WriteString(ie.Index.String())
+	out.WriteString("])")
+	return out.String()
+}
+
 func (p *Program) TokenLiteral() string {
 	if len(p.Statements) > 0 {
 		return p.Statements[0].TokenLiteral()
