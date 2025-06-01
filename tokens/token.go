@@ -44,6 +44,7 @@ const (
 	SLASH     = "/"
 	LBRACKET  = "["
 	RBRACKET  = "]"
+	COLON 	  = ":"
 
 	LT = "<"
 	GT = ">"
