@@ -89,6 +89,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerInfix(token.LBRACKET,p.parseIndexExpression)
+	p.registerPrefix(token.LBRAC,p.parseHashLiteral)
 	p.nextToken()
 	p.nextToken()
 
@@ -108,7 +109,6 @@ func (p *Parser) peekError(t token.TokenType) {
 	p.errors = append(p.errors, msg)
 
 }
-
 func (p *Parser) nextToken() {
 	p.curToken = p.peekToken
 	p.peekToken = p.l.NextToken()
@@ -174,13 +174,15 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	}
 	return stmt
 }
+// Check if current token is equal to "t"
 func (p *Parser) curTokenIs(t token.TokenType) bool {
 	return p.curToken.Type == t
 }
-
+// Check if the peekToken is equal to "t"
 func (p *Parser) peekTokenIs(t token.TokenType) bool {
 	return p.peekToken.Type == t
 }
+// This will check if the next token is "t" and if it is it will move the curToken to this token
 func (p *Parser) expectPeek(t token.TokenType) bool {
 	if p.peekTokenIs(t) {
 		p.nextToken()
@@ -411,7 +413,7 @@ func (p *Parser) parseExpressionList(end token.TokenType) []ast.Expression {
 }
 
 
-func (p * Parser) parseIndexExpression(left ast.Expression) ast.Expression{
+func (p *Parser) parseIndexExpression(left ast.Expression) ast.Expression{
 	exp := &ast.IndexExpression{Token: p.curToken,Left: left}
 	p.nextToken()
 	exp.Index = p.parseExpression(LOWEST)
@@ -420,4 +422,28 @@ func (p * Parser) parseIndexExpression(left ast.Expression) ast.Expression{
 		return nil
 	}
 	return exp
+}
+
+func (p *Parser) parseHashLiteral() ast.Expression{
+	hash := &ast.HashLiteral{Token: p.curToken}
+	hash.Pairs = make(map[ast.Expression]ast.Expression)
+	for !p.peekTokenIs(token.RBRAC){
+		p.nextToken()
+		key := p.parseExpression(LOWEST)
+		if !p.expectPeek(token.COLON){
+			return nil
+		}
+		p.nextToken()
+		value := p.parseExpression(LOWEST)
+
+		hash.Pairs[key]= value
+
+		if !p.peekTokenIs(token.RBRAC) && !p.expectPeek(token.COMMA){
+			return nil
+		}
+	}
+	if !p.expectPeek(token.RBRAC){
+		return nil
+	}
+	return hash
 }
